@@ -8,10 +8,18 @@ with h5py.File(snakemake.input.hdf5, "r") as hf:
     coaches = list(hf["coaches"].keys())
     race_ids = hf["race_ids"][:].astype("<U16")
     
-    df = pd.DataFrame(index=coaches, columns=race_ids)
-    df.index.name = "coach"
+    df_mu = pd.DataFrame(index=coaches, columns=race_ids)
+    df_mu.index.name = "coach"
+    df_phi = pd.DataFrame(index=coaches, columns=race_ids)
+    df_phi.index.name = "coach"
 
     for pid in coaches:
-        df.loc[pid] = hf["coaches"][pid]["mu"][0] * (PHI_PENALTY * hf["coaches"][pid]["phi"][0])
-    rank_df = df.reset_index().melt(var_name="race", id_vars="coach").sort_values("value", ascending=False)
-    rank_df.dropna(subset=["value"]).to_csv(snakemake.output.txt, sep="\t")
+        df_mu.loc[pid] = hf["coaches"][pid]["mu"][0]
+        df_phi.loc[pid] = hf["coaches"][pid]["phi"][0]
+    mu_melt = df_mu.reset_index().melt(var_name="race", id_vars="coach", value_name="mu")
+    phi_melt = df_phi.reset_index().melt(var_name="race", id_vars="coach", value_name="phi")
+
+    rank_df = pd.merge(mu_melt, phi_melt, on=["coach", "race"])
+    rank_df["value"] = (rank_df.mu - (PHI_PENALTY * rank_df.phi))
+    rank_df.dropna(subset=["value"]).sort_values(
+        "value", ascending=False).to_csv(snakemake.output.txt, sep="\t", float_format='%.3f')

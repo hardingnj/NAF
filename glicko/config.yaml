@@ -1,6 +1,6 @@
 mu: 1500
 phi: 350
 tau: 0.2
-sigma: 0.1
+sigma: 0.06
 phi_penalty: 2.5
 update_freq: 'M'

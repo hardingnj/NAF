@@ -6,7 +6,7 @@ rule all:
 
 rule process_data:
   input:
-    csv="data/all_matches.csv.gz"
+    csv="../data/all_matches.csv.gz"
   output:
     txt="processed/cleaned_games.txt.gz"
   script:
