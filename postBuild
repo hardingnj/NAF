@@ -1,0 +1,4 @@
+curl -OL https://github.com/sublee/glicko2/archive/master.zip
+unzip master.zip
+cd glicko2-master
+python setup.py install
