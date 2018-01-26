@@ -1,1 +1,4 @@
 .ipynb_checkpoints
+.snakemake
+scripts/__pycache__/
+output/cleaned_games.txt.gz
