@@ -34,7 +34,7 @@ rule get_ranks:
   input:
     hdf5=rules.compute_rankings.output.hdf5
   output:
-    txt="output/player_ranks.csv"
+    csv="output/player_ranks.csv"
   params:
     phi_penalty=config["phi_penalty"]
   script:
