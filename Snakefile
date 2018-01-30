@@ -7,9 +7,20 @@ rule all:
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
+rule dl_gdata:
+  output:
+    "data/all_matches.csv.gz"
+  shell:
+    "curl -L www.dropbox.com/s/t8cq8zixe99fl8f/all_matches.csv?dl=1 | gzip > {output}"
+
+rule dl_pdata:
+  output:
+    "data/all_coaches.csv.gz"
+  shell:
+    "curl -L https://www.dropbox.com/s/xus9dhoytlhofqs/all_coaches.csv?dl=1 | gzip > {output}"
+
 rule process_data:
   input:
-    #csv=HTTP.remote("www.dropbox.com/s/t8cq8zixe99fl8f/all_matches.csv", keep_local=True)
     csv="data/all_matches.csv.gz"
   output:
     txt="output/cleaned_games.txt.gz"
