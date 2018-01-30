@@ -1,7 +1,16 @@
 import h5py
 import pandas as pd
+def cleanup(x):         
+    if isinstance(x, float):
+        return "Unknown"
+    y = x.lower()
+    y = y.rstrip()
+    return y.capitalize()
+
 
 PHI_PENALTY = snakemake.params.phi_penalty
+coach_info = pd.read_csv(snakemake.input.csv)
+coach_info["nation"] = coach_info.nation.apply(cleanup)
 
 with h5py.File(snakemake.input.hdf5, "r") as hf:
     
@@ -21,5 +30,10 @@ with h5py.File(snakemake.input.hdf5, "r") as hf:
 
     rank_df = pd.merge(mu_melt, phi_melt, on=["coach", "race"])
     rank_df["value"] = (rank_df.mu - (PHI_PENALTY * rank_df.phi))
-    rank_df.dropna(subset=["value"]).sort_values(
-        "value", ascending=False).to_csv(snakemake.output.txt, float_format='%.3f')
+
+    # merge with existing coach info.
+    merged = pd.merge(rank_df, coach_info, left_on=["coach", "race"], right_on=["naf_name", "race"])
+    merged = merged.dropna(subset=["value"]).sort_values("value", ascending=False)
+    merged.reset_index(inplace=True, drop=True)
+    merged.index = merged.index.values + 1
+    merged.to_csv(snakemake.output.csv, float_format='%.3f')

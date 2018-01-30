@@ -3,3 +3,4 @@
 scripts/__pycache__/
 output/cleaned_games.txt.gz
 output/rankings.h5
+data/
