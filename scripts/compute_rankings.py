@@ -22,4 +22,4 @@ with h5py.File(snakemake.input.hdf5, "r") as hf:
     rank_df = pd.merge(mu_melt, phi_melt, on=["coach", "race"])
     rank_df["value"] = (rank_df.mu - (PHI_PENALTY * rank_df.phi))
     rank_df.dropna(subset=["value"]).sort_values(
-        "value", ascending=False).to_csv(snakemake.output.txt, sep="\t", float_format='%.3f')
+        "value", ascending=False).to_csv(snakemake.output.txt, float_format='%.3f')
