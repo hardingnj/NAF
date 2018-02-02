@@ -1,4 +1,4 @@
-configfile: "config.yaml"
+configfile: "config.yml"
 
 rule all:
   input:

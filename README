@@ -8,11 +8,11 @@ It's currently set up to work on data from the NAF, the organising body of the b
 
 Hopefully simple with `conda` installed. Simply run the `installenv.sh` script. This reads the package dependencies from the `requirements.txt` file.
 
-This repo is also set up with `binder`, allowing anyone to set up an interactive session with these data. Instructions to follow. 
+This repo is also set up with `binder`, allowing anyone to set up an interactive session with these data. Instructions to follow. This is what the `environment.yml` file is for.
 
 ## Running
 
-Once conda and the enviroment is set up, the command `snakemake` should create all the necessary files. You can read more about snakemake (here)[].
+Once conda and the enviroment is set up, the command `snakemake` should create all the necessary files. You can read more about snakemake (here)[]. The main parameters can be changed in the `config.yml` file.
 
 ## Output
 
