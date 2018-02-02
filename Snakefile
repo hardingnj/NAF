@@ -2,7 +2,7 @@ configfile: "config.yaml"
 
 rule all:
   input:
-    "rankings.html"
+    "output/rankings.html"
 
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
@@ -56,7 +56,7 @@ rule makehtml:
   input:
     csv=rules.get_ranks.output.csv,
   output:
-    "rankings.html",
+    "output/rankings.html",
   script:
     "scripts/makehtml.py"
 
