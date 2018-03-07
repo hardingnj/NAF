@@ -10,7 +10,6 @@ MU = snakemake.params.mu
 PHI = snakemake.params.phi      # Starting rating deviation
 SIGMA = snakemake.params.sigma  # starting volatility
 UPDATE_FREQ = snakemake.params.update_freq
-debug = False
 
 glck = Glicko.Glicko2(mu=MU, tau=TAU, phi=PHI, sigma=SIGMA)
 
@@ -19,12 +18,21 @@ rank_data.sort_index(inplace=True)
 
 uniq_races = rank_data.home_race.unique().tolist()
 
-if debug:
-    rank_data = rank_data[:pd.Timestamp("2005-01-01")]
+today = pd.Timestamp.today()
+cutoff = pd.Timestamp(year=today.year, month=today.month, day=1)
+
+# If cutoff is a sunday, avoid weird situations where tournaments are split.
+if cutoff.dayofweek == 6:
+    cutoff = pd.Timestamp(year=today.year, month=today.month, day=2)
+
+# Trim data to cutoff
+rank_data = rank_data[:pd.Timestamp(cutoff)]
 
 grouped_games = rank_data.groupby(pd.Grouper(freq=UPDATE_FREQ))
 
 rank_periods = [p for p, _ in grouped_games]
+print("Last periods:", rank_periods[-2:])
+
 ranking_data = dict()
 
 for period, x in grouped_games:
