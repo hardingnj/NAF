@@ -65,6 +65,6 @@ race_select.js_on_change('value', generic_callback)
 #year_select.js_on_change('value', generic_callback)
 p = column(race_select, data_table)
 
-output_file('rankings.html')
+output_file('output/rankings.html')
 
 save(p)
