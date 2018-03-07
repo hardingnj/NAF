@@ -31,8 +31,6 @@ rank_data = rank_data[:pd.Timestamp(cutoff)]
 grouped_games = rank_data.groupby(pd.Grouper(freq=UPDATE_FREQ))
 
 rank_periods = [p for p, _ in grouped_games]
-print("Last periods:", rank_periods[-2:])
-
 ranking_data = dict()
 
 for period, x in grouped_games:
