@@ -2,6 +2,7 @@ configfile: "config.yml"
 
 rule all:
   input:
+    "output/NAFupload.csv",
     "output/rankings.html"
 
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
@@ -59,4 +60,14 @@ rule makehtml:
     "output/rankings.html",
   script:
     "scripts/makehtml.py"
+
+rule prep_upload:
+  input:
+    csv=rules.get_ranks.output.csv
+  output:
+    csv="output/NAFupload.csv"
+  params:
+    phi_limit=config["phi_limit"]
+  script:
+    "scripts/prep_upload_csv.py"
 
