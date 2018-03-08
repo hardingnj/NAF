@@ -48,6 +48,8 @@ for i, (hid, aid) in enumerate(zip(naf_data.home_coach.values, naf_data.away_coa
                     excluded_ids.append(xid)
                 keep[i] = False
 
+keep = keep & (naf_data.variant == 'Blood Bowl').values
+
 print(naf_data.shape[0], "games")
 naf_data = naf_data.loc[keep]
 print(naf_data.shape[0], "games after qc")
