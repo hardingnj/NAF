@@ -26,8 +26,6 @@ for phi, raceid in zip(df.phi.values, df.race.values):
     
     counter.update([raceid])
     race_rank_list.append(counter[raceid])
-  
-print(counter)
 
 df["active"] = np.where(df.phi > 100, "Inactive", "Active") 
 df["rank"] = rank_list
