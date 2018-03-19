@@ -67,7 +67,8 @@ rule prep_upload:
   output:
     csv="output/NAFupload.csv"
   params:
-    phi_limit=config["phi_limit"]
+    phi_limit=config["phi_limit"],
+    phi_active=config["phi_active"]
   script:
     "scripts/prep_upload_csv.py"
 

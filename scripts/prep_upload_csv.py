@@ -10,14 +10,17 @@ from collections import Counter
 counter = Counter()
 
 df = pd.read_csv(fn, index_col=0)
+# apply phi cutoff
+df = df.loc[df.phi < snakemake.params.phi_limit]
 
 rank = 1
 url_path = "https://member.thenaf.net/index.php?module=NAF&type=tournamentinfo&uid={nafnum}||{value}"
 
 rank_list = []
 race_rank_list = []
+
 for phi, raceid in zip(df.phi.values, df.race.values):
-  if phi > snakemake.params.phi_limit:
+  if phi > snakemake.params.phi_active:
     rank_list.append(999999)
     race_rank_list.append(999999)
   else:
@@ -27,7 +30,6 @@ for phi, raceid in zip(df.phi.values, df.race.values):
     counter.update([raceid])
     race_rank_list.append(counter[raceid])
 
-df["active"] = np.where(df.phi > 100, "Inactive", "Active") 
 df["rank"] = rank_list
 df["racerank"] = race_rank_list
 
