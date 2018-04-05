@@ -65,7 +65,10 @@ rule prep_upload:
   input:
     csv=rules.get_ranks.output.csv
   output:
-    csv="output/NAFupload.csv"
+    upload="output/NAFupload.csv",
+    winners="output/winners.csv",
+    losers="output/losers.csv",
+    races="output/top_by_race.csv"
   params:
     phi_limit=config["phi_limit"],
     phi_active=config["phi_active"]
