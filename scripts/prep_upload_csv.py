@@ -21,8 +21,8 @@ df.loc[df.last_phi > 100, "old_rating"] = np.nan
 # Global ranks.
 df["rank"] = df.rating.rank(ascending=False, na_option="bottom", method="min").astype("int")
 df["old_rank"] = df.old_rating.rank(ascending=False, na_option="bottom", method="min").astype("int")
-df.loc[df.curr_phi > phi_cut, "rank"] = 999999
-df.loc[df.last_phi > phi_cut, "old_rank"] = 999999
+df.loc[~(df.curr_phi <= phi_cut), "rank"] = 999999
+df.loc[~(df.last_phi <= phi_cut), "old_rank"] = 999999
 
 rank_str = "{0} ({1})"
 df["rank_rep"] = df[["rank", "old_rank"]].apply(
@@ -35,8 +35,8 @@ df["old_race_rank"] = df.groupby("race").old_rating.transform(
   lambda y: y.rank(ascending=False, na_option="bottom", method="min")).astype("int")
 
 # Need to set ranks for global and race to 999999. if phi > X
-df.loc[df.curr_phi > phi_cut, "race_rank"] = 999999
-df.loc[df.last_phi > phi_cut, "old_race_rank"] = 999999
+df.loc[~(df.curr_phi <= phi_cut), "race_rank"] = 999999
+df.loc[~(df.last_phi <= phi_cut), "old_race_rank"] = 999999
 df["race_rank_rep"] = df[["race_rank", "old_race_rank"]].apply(
   lambda y: rank_str.format(y["race_rank"], y["old_race_rank"]).replace("999999", "-"), axis=1)
 
@@ -59,7 +59,7 @@ df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=
 printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "mu", "phi", "rating"]
 
 dfq = df.sort_values("qrank", ascending=True)[printcols]
-dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f")
+dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
 
 # top with each race
 df.query("qrace_rank == 1")[printcols].to_csv(snakemake.output.races, index=False, header=True, float_format="%.1f")
