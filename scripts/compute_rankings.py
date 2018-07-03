@@ -1,6 +1,7 @@
 import h5py
 import pandas as pd
 import string
+from itertools import product
 
 
 def cleanup(x):         
@@ -51,8 +52,13 @@ with h5py.File(snakemake.input.hdf5, "r") as fh:
     rank_df = pd.merge(curr_df, last_df, on=["coach", "race"])
 
     # merge with existing coach info.
-    merged = pd.merge(rank_df, coach_info, how="left", left_on=["coach", "race"], right_on=["naf_name", "race"])
+    merged = pd.merge(rank_df, coach_info, how="inner", left_on=["coach", "race"], right_on=["naf_name", "race"])
+    assert merged.shape[0] == rank_df.shape[0], "Problem with merge. Are all combinations present?"
     merged = merged.dropna(subset=["curr_rating"]).sort_values("curr_rating", ascending=False)
     merged.reset_index(inplace=True, drop=True)
     merged.index = merged.index.values + 1
+
+    for x, y in product(["mu", "phi", "rating"], ["curr_", "last_"]):
+        merged[y + x] = merged[y + x].astype("float")
+
     merged.to_csv(snakemake.output.csv, float_format='%.1f')

@@ -6,6 +6,8 @@ fn = snakemake.input.csv
 phi_cut = snakemake.params.phi_active
 
 df = pd.read_csv(fn, index_col=0).drop(["rank", "race_rank"], axis=1)
+df["naf_number"] = df["naf_number"].astype("int")
+
 df = df.loc[df.curr_phi < snakemake.params.phi_limit]
 
 rank = 1
@@ -58,7 +60,7 @@ df["race_rank"] = df["race_rank_rep"]
 df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=y.coach), axis=1)
 printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "mu", "phi", "rating"]
 
-dfq = df.sort_values("qrank", ascending=True)[printcols]
+dfq = df.sort_values("rating").sort_values("qrank", ascending=True)[printcols]
 dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
 
 # top with each race
