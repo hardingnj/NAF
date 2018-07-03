@@ -24,6 +24,7 @@ def read_hdf5(hf, ix, prefix):
 
     # loop through all coaches, grab most recent mu/phi
     for pid in coaches:
+           
         df_mu.loc[pid] = hf["coaches"][pid]["mu"][ix]
         df_phi.loc[pid] = hf["coaches"][pid]["phi"][ix]
 
@@ -39,7 +40,8 @@ def read_hdf5(hf, ix, prefix):
 
 PHI_PENALTY = snakemake.params.phi_penalty
 coach_info = pd.read_csv(snakemake.input.csv)
-coach_info["nation"] = coach_info.nation.apply(cleanup)
+coach_info["nation"] = coach_info.nation.apply(cleanup).replace(
+    "United States Of America", "USA")
 
 with h5py.File(snakemake.input.hdf5, "r") as fh:
 
@@ -49,7 +51,7 @@ with h5py.File(snakemake.input.hdf5, "r") as fh:
     rank_df = pd.merge(curr_df, last_df, on=["coach", "race"])
 
     # merge with existing coach info.
-    merged = pd.merge(rank_df, coach_info, left_on=["coach", "race"], right_on=["naf_name", "race"])
+    merged = pd.merge(rank_df, coach_info, how="left", left_on=["coach", "race"], right_on=["naf_name", "race"])
     merged = merged.dropna(subset=["curr_rating"]).sort_values("curr_rating", ascending=False)
     merged.reset_index(inplace=True, drop=True)
     merged.index = merged.index.values + 1
