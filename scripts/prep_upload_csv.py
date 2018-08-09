@@ -5,7 +5,23 @@ import numpy as np
 fn = snakemake.input.csv
 phi_cut = snakemake.params.phi_active
 
-df = pd.read_csv(fn, index_col=0).drop(["rank", "race_rank"], axis=1)
+dtypes = {
+    "coach": str,
+    "race": str, 
+    "curr_mu": np.float, 
+    "curr_phi": np.float,
+    "curr_rating": np.float,
+    "last_mu": np.float, 
+    "last_phi": np.float, 
+    "last_rating": np.float, 
+    "naf_name": str,
+    "naf_number": np.int32,
+    "nation": str}
+df = pd.read_csv(
+    fn, 
+    index_col=0, 
+    dtype=dtypes)
+
 df["naf_number"] = df["naf_number"].astype("int")
 
 df = df.loc[df.curr_phi < snakemake.params.phi_limit]
@@ -60,8 +76,12 @@ df["race_rank"] = df["race_rank_rep"]
 df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=y.coach), axis=1)
 printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "mu", "phi", "rating"]
 
+for qq in "mu", "phi", "rating":
+    df[qq] = df[qq].round(decimals=1)
+
+
 dfq = df.sort_values("rating").sort_values("qrank", ascending=True)[printcols]
-dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
+dfq.to_csv(snakemake.output.upload, index=False, header=True)
 
 # top with each race
 df.query("qrace_rank == 1")[printcols].to_csv(snakemake.output.races, index=False, header=True, float_format="%.1f")

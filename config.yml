@@ -3,6 +3,6 @@ phi: 350
 tau: 0.2
 sigma: 0.06
 phi_penalty: 2.5
-phi_limit: 250
+phi_limit: 240
 phi_active: 100
 update_freq: 'M'
