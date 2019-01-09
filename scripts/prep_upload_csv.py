@@ -5,7 +5,7 @@ import numpy as np
 fn = snakemake.input.csv
 phi_cut = snakemake.params.phi_active
 
-df = pd.read_csv(fn, index_col=0).drop(["rank", "race_rank"], axis=1)
+df = pd.read_csv(fn, index_col=0)
 df = df.loc[df.curr_phi < snakemake.params.phi_limit]
 
 rank = 1
@@ -53,6 +53,9 @@ df["qrank"] = df["rank"]
 df["rank"] = df["rank_rep"]
 df["qrace_rank"] = df["race_rank"]
 df["race_rank"] = df["race_rank_rep"]
+
+#if naf_number is missing... 
+df["naf_number"] = df.naf_number.fillna(0).astype("int")
 
 # create URL
 df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=y.coach), axis=1)

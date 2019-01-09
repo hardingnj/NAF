@@ -1,3 +1,8 @@
+"""
+This script cleans the NAF game data, removing where there are missing values or coaches do not 
+meet naming requirements
+"""
+
 import pandas as pd
 import re
 import numpy as np

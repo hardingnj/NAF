@@ -21,10 +21,6 @@ uniq_races = rank_data.home_race.unique().tolist()
 today = pd.Timestamp.today()
 cutoff = pd.Timestamp(year=today.year, month=today.month, day=1)
 
-# If cutoff is a sunday, avoid weird situations where tournaments are split.
-if cutoff.dayofweek == 6:
-    cutoff = pd.Timestamp(year=today.year, month=today.month, day=2)
-
 # Trim data to cutoff
 rank_data = rank_data[:pd.Timestamp(cutoff)]
 
