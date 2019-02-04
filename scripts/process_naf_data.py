@@ -34,6 +34,10 @@ allowed_name = re.compile("\w+")
 
 keep = np.ones(naf_data.shape[0], dtype="bool")
 
+# Fix for Marco
+for f in "home_coach", "away_coach":
+    naf_data[f] = naf_data[f].str.replace("badstorm", "BadStorm")
+
 # VALIDATION
 excluded_ids = []
 
