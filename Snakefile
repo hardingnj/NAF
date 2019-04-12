@@ -71,7 +71,8 @@ rule prep_upload:
     races="output/top_by_race.csv"
   params:
     phi_limit=config["phi_limit"],
-    phi_active=config["phi_active"]
+    phi_active=config["phi_active"],
+    phi_penalty=config["phi_penalty"]
   script:
     "scripts/prep_upload_csv.py"
 

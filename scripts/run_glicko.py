@@ -19,10 +19,11 @@ rank_data.sort_index(inplace=True)
 uniq_races = rank_data.home_race.unique().tolist()
 
 today = pd.Timestamp.today()
-cutoff = pd.Timestamp(year=today.year, month=today.month, day=1)
+cutoff = pd.Timestamp(year=today.year, month=today.month, day=1) - pd.Timedelta('1 days')
+print(cutoff)
 
 # Trim data to cutoff
-rank_data = rank_data[:pd.Timestamp(cutoff)]
+rank_data = rank_data[:cutoff]
 
 grouped_games = rank_data.groupby(pd.Grouper(freq=UPDATE_FREQ))
 
