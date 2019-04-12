@@ -21,13 +21,15 @@ datatypes = {
     'away_tr': int,
     'swiss': bool}
 
-naf_data = pd.read_csv(snakemake.input.csv, sep=",", index_col=None, dtype=datatypes)
+naf_data = pd.read_csv(
+    snakemake.input.csv, sep=",", index_col=0, dtype=datatypes, parse_dates=[0])
+
 for col in naf_data.columns:
     print(col, naf_data[col].dtype)
 
-naf_data["date"] = pd.to_datetime(naf_data.date, format="%Y/%m/%d")
+#naf_data["date"] = pd.to_datetime(naf_data.date, format="%Y/%m/%d")
 
-naf_data.set_index("date", inplace=True)
+#naf_data.set_index("date", inplace=True)
 naf_data.sort_index(inplace=True)
 
 allowed_name = re.compile("\w+")

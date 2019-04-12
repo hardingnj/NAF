@@ -21,7 +21,8 @@ df["old_rating"] = df.last_rating.copy()
 df.loc[df.last_phi > 100, "old_rating"] = np.nan
 
 # Compute_rank change
-df["change"] = df.rating - df.old_rating
+df["decay"] = (df.last_phi - df.curr_phi) * snakemake.params.phi_penalty
+df["change"] = df.curr_mu - df.last_mu
 
 # Global ranks.
 df["rank"] = df.rating.rank(ascending=False, na_option="bottom", method="min").astype("int")
@@ -64,7 +65,7 @@ df["naf_number"] = df.naf_number.fillna(0).astype("int")
 
 # create URL
 df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=y.coach), axis=1)
-printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "rating", "change"]
+printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "rating", "change", "decay"]
 
 dfq = df.sort_values("qrank", ascending=True)[printcols]
 dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
