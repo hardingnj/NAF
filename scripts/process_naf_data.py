@@ -61,6 +61,17 @@ for i, (hid, aid) in enumerate(zip(naf_data.home_coach.values, naf_data.away_coa
 
 keep = keep & (naf_data.variant == 'Blood Bowl').values
 
+if snakemake.params.globalmode:
+    print("In global mode")
+    excl_races_home = naf_data.home_race.apply(lambda y: y not in snakemake.params.globalexcl)
+    excl_races_away = naf_data.away_race.apply(lambda y: y not in snakemake.params.globalexcl)
+    print(keep.sum())
+    keep = keep & excl_races_home & excl_races_away
+    print(keep.sum())
+    naf_data.home_race = "global"
+    naf_data.away_race = "global"
+
+
 print(naf_data.shape[0], "games")
 naf_data = naf_data.loc[keep]
 print(naf_data.shape[0], "games after qc")
