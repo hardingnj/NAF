@@ -25,6 +25,9 @@ rule process_data:
     csv=rules.dl_gdata.output.csv
   output:
     txt="output/cleaned_games.txt.gz"
+  params:
+    globalmode=config["global_mode"],
+    globalexcl=config["global_excl"]
   script:
     "scripts/process_naf_data.py"
 

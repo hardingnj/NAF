@@ -6,3 +6,5 @@ phi_penalty: 2.5
 phi_limit: 200
 phi_active: 100
 update_freq: 'M'
+global_mode: True
+global_excl: ['Goblins', 'Halflings', 'Ogres']
