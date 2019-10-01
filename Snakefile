@@ -41,7 +41,8 @@ rule compute_rankings:
     phi=config["phi"],
     tau=config["tau"],
     sigma=config["sigma"],
-    update_freq=config["update_freq"]
+    update_freq=config["update_freq"],
+    cutoff=config.get("cutoff", None)
   script:
     "scripts/run_glicko.py"
 
@@ -75,7 +76,9 @@ rule prep_upload:
   params:
     phi_limit=config["phi_limit"],
     phi_active=config["phi_active"],
-    phi_penalty=config["phi_penalty"]
+    phi_penalty=config["phi_penalty"],
+    extra_cols=config["extra_cols"],
+    globalmode=config["global_mode"]
   script:
     "scripts/prep_upload_csv.py"
 

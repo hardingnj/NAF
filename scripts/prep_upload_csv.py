@@ -65,10 +65,20 @@ df["naf_number"] = df.naf_number.fillna(0).astype("int")
 
 # create URL
 df["coachname"] = df.apply(lambda y: url_path.format(nafnum=y.naf_number, value=y.coach), axis=1)
-printcols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "rating", "change", "decay"]
+core_cols = ["rank", "race_rank", "coachname", "naf_number", "race", "nation", "rating"]
+extra_cols = snakemake.params.extra_cols
+printcols = core_cols + extra_cols
 
-dfq = df.sort_values("qrank", ascending=True)[printcols]
-dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
+if snakemake.params.globalmode:
+    dfq = df.sort_values("rating", ascending=False)[printcols[2:]]
+    g = dfq.groupby("nation")
+    for nat, _df in g:
+      _df.reset_index(drop=True).to_csv(snakemake.output.upload.replace("csv", nat + ".csv"), index=True, header=True, float_format="%.2f", quoting=2)
+    dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
+
+else:
+    dfq = df.sort_values("qrank", ascending=True)[printcols]
+    dfq.to_csv(snakemake.output.upload, index=False, header=True, float_format="%.1f", quoting=2)
 
 # top with each race
 df.query("qrace_rank == 1")[printcols].to_csv(snakemake.output.races, index=False, header=True, float_format="%.1f")

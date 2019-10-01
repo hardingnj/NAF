@@ -19,8 +19,12 @@ rank_data.sort_index(inplace=True)
 uniq_races = rank_data.home_race.unique().tolist()
 
 today = pd.Timestamp.today()
-cutoff = pd.Timestamp(year=today.year, month=today.month, day=1) - pd.Timedelta('1 days')
-print(cutoff)
+if snakemake.params.cutoff is None:
+    cutoff = pd.Timestamp(year=today.year, month=today.month, day=1) - pd.Timedelta('1 days')
+elif snakemake.params.cutoff == "today":
+    cutoff = today
+else:
+    cutoff = pd.to_datetime(snakemake.params.cutoff)
 
 # Trim data to cutoff
 rank_data = rank_data[:cutoff]
