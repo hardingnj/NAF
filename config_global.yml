@@ -1,0 +1,13 @@
+mu: 1500
+phi: 500
+tau: 0.2
+sigma: 0.06
+phi_penalty: 3
+phi_limit: 250
+phi_active: 250
+update_freq: '2W'
+global_mode: True
+global_excl: ['Goblins', 'Halflings', 'Ogres', 'Underworld']
+extra_cols: ['phi', 'mu']
+cutoff: 30.04.19
+time_period: "5y"

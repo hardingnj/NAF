@@ -42,7 +42,8 @@ rule compute_rankings:
     tau=config["tau"],
     sigma=config["sigma"],
     update_freq=config["update_freq"],
-    cutoff=config.get("cutoff", None)
+    cutoff=config.get("cutoff", None),
+    period=config.get("time_period", None)
   script:
     "scripts/run_glicko.py"
 

@@ -27,7 +27,12 @@ else:
     cutoff = pd.to_datetime(snakemake.params.cutoff)
 
 # Trim data to cutoff
-rank_data = rank_data[:cutoff]
+if snakemake.params.period is not None:
+    period = pd.Timedelta(snakemake.params.period)
+    rank_data = rank_data[(cutoff - period):cutoff]
+    print("applied precutoff period of of", period)
+else:
+    rank_data = rank_data[:cutoff]
 
 grouped_games = rank_data.groupby(pd.Grouper(freq=UPDATE_FREQ))
 
